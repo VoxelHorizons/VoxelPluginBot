@@ -1,5 +1,28 @@
 # VoxelPluginBot — Suggested Support Replies
 
+## Production Docker image (GHCR / EasyPanel)
+
+When changes reach `main`, [GitHub Actions](https://github.com/VoxelHorizons/VoxelPluginBot/actions/workflows/docker-image.yml) runs the storage tests, builds the bot container, and publishes:
+
+- `ghcr.io/voxelhorizons/voxelpluginbot:latest`
+- `ghcr.io/voxelhorizons/voxelpluginbot:sha-<first-12-commit-characters>` (immutable revision tag)
+
+The workflow can also be started manually with **Run workflow**. No extra GitHub secrets or third-party Actions are needed; it uses the built-in `GITHUB_TOKEN` with `packages: write`.
+
+### EasyPanel setup
+
+1. Wait for the **Publish container to GHCR** workflow to succeed on `main`.
+2. GHCR packages are private when first published. In the VoxelHorizons organisation's **Packages** page, either make the `voxelpluginbot` package **Public** for an unauthenticated EasyPanel pull, or configure GHCR credentials for a private pull.
+3. In EasyPanel create **Project → New Service → App**, then set **Source → Docker Image** to `ghcr.io/voxelhorizons/voxelpluginbot:latest`.
+4. In **Environment**, configure `DISCORD_TOKEN=...` with the real bot token, and optionally `DISCORD_TEST_GUILD_ID=<server-id>` if you previously synced slash commands to that guild. The image already defaults to `DATABASE_PATH=/data/replies.sqlite3`.
+5. In **Storage**, add a persistent **Volume** mounted inside the container at `/data`. The container runs as UID/GID `10001:10001`; ensure the mount is writable by that user.
+6. Set **one replica**, leave domains and ports unconfigured (the Discord gateway requires outbound access only), then **Deploy**. Check the service logs for `VoxelPluginBot ready as ...`.
+
+**Preserving saved responses:** Before switching off your local Windows bot, stop it and back up its `data/replies.sqlite3`. Copy that database into the EasyPanel `/data/replies.sqlite3` volume **before starting the production bot**, with file ownership/writability for UID 10001. If no database is copied, the container starts with an empty reply database. Do **not** commit the SQLite file or your token to GitHub. Avoid running Windows and EasyPanel copies simultaneously under the same token.
+
+The `latest` tag is updated by GitHub Actions on each push to `main`, but EasyPanel still needs to **Deploy** again to pull and run the newest image. A pinned `sha-...` tag can be used for reproducible releases and rollback.
+
+## Support response pack
 This pack contains 28 additional quick replies. It **does not** include or overwrite your existing `!!offline`, `!!support`, `!!support furniture`, or `!!support vehicles` replies.
 
 ## Files
