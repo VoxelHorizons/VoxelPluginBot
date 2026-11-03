@@ -9,6 +9,7 @@ from pathlib import Path
 import discord
 from discord import app_commands
 
+from permissions import has_reply_editor_role
 from storage import DEFAULT_COLOR, Reply, ReplyStore, normalize_keyword, parse_color
 
 TOKEN = os.environ.get("DISCORD_TOKEN", "")
@@ -116,6 +117,22 @@ async def require_staff(interaction: discord.Interaction) -> bool:
     return False
 
 
+async def require_reply_editor(interaction: discord.Interaction) -> bool:
+    """Require Plugin Developer or Contributor, independent of Manage Messages."""
+    if (
+        interaction.guild is not None
+        and isinstance(interaction.user, discord.Member)
+        and has_reply_editor_role(role.id for role in interaction.user.roles)
+    ):
+        return True
+    await interaction.response.send_message(
+        "Only members with the **Plugin Developer** or **Contributor** role "
+        "can create or edit support replies.",
+        ephemeral=True,
+    )
+    return False
+
+
 async def validated_keyword(
     interaction: discord.Interaction, text: str, subkey: str | None = None
 ) -> str | None:
@@ -152,7 +169,7 @@ class ReplyModal(discord.ui.Modal):
         self.add_item(self.reply_color)
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        if not await require_staff(interaction):
+        if not await require_reply_editor(interaction):
             return
         if interaction.guild_id != self.guild_id:
             await interaction.response.send_message("This form belongs to another server.", ephemeral=True)
@@ -184,7 +201,7 @@ reply_commands = app_commands.Group(
 async def create_reply(
     interaction: discord.Interaction, keyword: str, subkey: str | None = None
 ) -> None:
-    if not await require_staff(interaction):
+    if not await require_reply_editor(interaction):
         return
     keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
@@ -205,7 +222,7 @@ async def create_reply(
 async def edit_reply(
     interaction: discord.Interaction, keyword: str, subkey: str | None = None
 ) -> None:
-    if not await require_staff(interaction):
+    if not await require_reply_editor(interaction):
         return
     keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
