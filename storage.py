@@ -6,8 +6,10 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-NAME = re.compile(r"^[a-z0-9_-]{1,32}$")
-TRIGGER = re.compile(r"^!!([a-z0-9_-]{1,32})$", re.IGNORECASE)
+# A saved reply may have one optional subkey: "support" or "support furniture".
+# Keep both values in the existing keyword column to avoid database migrations.
+NAME = re.compile(r"^[a-z0-9_-]{1,32}(?:[ \t]+[a-z0-9_-]{1,32})?$")
+TRIGGER = re.compile(r"^!!([a-z0-9_-]{1,32})(?:[ \t]+([a-z0-9_-]{1,32}))?$", re.IGNORECASE)
 DEFAULT_COLOR = 0x57F287
 
 
@@ -21,15 +23,22 @@ class Reply:
 
 
 def normalize_keyword(value: str) -> str:
+    """Canonical key with at most one optional subkey, e.g. support furniture."""
     keyword = value.strip().lower().removeprefix("!!")
     if not NAME.fullmatch(keyword):
-        raise ValueError("Use 1–32 letters, numbers, hyphens or underscores.")
-    return keyword
+        raise ValueError(
+            "Use a keyword and optional subkey (1–32 letters, numbers, hyphens or underscores each)."
+        )
+    return " ".join(keyword.split())
 
 
 def match_trigger(message: str) -> str | None:
+    """Recognise an entire !!keyword or !!keyword subkey message, not incidental text."""
     found = TRIGGER.fullmatch(message.strip())
-    return found.group(1).lower() if found else None
+    if not found:
+        return None
+    parts = [part.lower() for part in found.groups() if part is not None]
+    return " ".join(parts)
 
 
 def parse_color(value: str) -> int:

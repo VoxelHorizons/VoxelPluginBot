@@ -1,19 +1,27 @@
-"""Voxel Horizons support quick replies: !!keyword, managed in Discord."""
+"""Voxel Horizons quick replies: !!keyword [subkey], managed in Discord."""
 from __future__ import annotations
 
 import os
+import re
 import time
 from pathlib import Path
 
 import discord
 from discord import app_commands
 
-from storage import DEFAULT_COLOR, Reply, ReplyStore, match_trigger, normalize_keyword, parse_color
+from storage import DEFAULT_COLOR, Reply, ReplyStore, normalize_keyword, parse_color
 
 TOKEN = os.environ.get("DISCORD_TOKEN", "")
 TEST_GUILD_ID = os.environ.get("DISCORD_TEST_GUILD_ID")
 DATABASE_PATH = Path(os.environ.get("DATABASE_PATH", "data/replies.sqlite3"))
 store = ReplyStore(DATABASE_PATH)
+
+# A saved command can appear anywhere in a message, including with extra text.
+# The optional next word is treated as a subkey only when that saved reply exists.
+INLINE_TRIGGER = re.compile(
+    r"!!([a-z0-9_-]{1,32})(?![a-z0-9_-])(?:[ \t]+([a-z0-9_-]{1,32})(?![a-z0-9_-]))?",
+    re.IGNORECASE,
+)
 
 intents = discord.Intents.default()
 intents.message_content = True  # Required for message triggers such as !!logs.
@@ -23,7 +31,7 @@ class VoxelReplyBot(discord.Client):
     def __init__(self):
         super().__init__(intents=intents, allowed_mentions=discord.AllowedMentions.none())
         self.tree = app_commands.CommandTree(self)
-        self.last_used: dict[tuple[int, int], float] = {}
+        self.last_used: dict[tuple[int, int, str], float] = {}
 
     async def setup_hook(self) -> None:
         self.tree.add_command(reply_commands)
@@ -40,14 +48,30 @@ class VoxelReplyBot(discord.Client):
     async def on_message(self, message: discord.Message) -> None:
         if message.guild is None or message.author.bot:
             return
-        keyword = match_trigger(message.content)
-        if not keyword:
-            return
-        reply = store.get(message.guild.id, keyword)
+        # Scan for the first *saved* command anywhere in the message.
+        # Prefer the optional subkey when it exists; otherwise use the base
+        # reply, even if unrelated words follow (e.g. "!!support please help").
+        keyword = None
+        reply = None
+        for match in INLINE_TRIGGER.finditer(message.content):
+            base = match.group(1).lower()
+            subkey = match.group(2)
+            if subkey:
+                candidate = f"{base} {subkey.lower()}"
+                reply = store.get(message.guild.id, candidate)
+                if reply:
+                    keyword = candidate
+                    break
+            reply = store.get(message.guild.id, base)
+            if reply:
+                keyword = base
+                break
         if not reply:
             return
         # Guard against someone repeatedly invoking the same canned responses.
-        key = (message.guild.id, message.author.id)
+        # Apply cooldown to a specific saved reply, not every command from this user.
+        # This lets !!support and !!support furniture work back-to-back.
+        key = (message.guild.id, message.author.id, keyword)
         now = time.monotonic()
         if now - self.last_used.get(key, -999.0) < 5:
             return
@@ -92,9 +116,11 @@ async def require_staff(interaction: discord.Interaction) -> bool:
     return False
 
 
-async def validated_keyword(interaction: discord.Interaction, text: str) -> str | None:
+async def validated_keyword(
+    interaction: discord.Interaction, text: str, subkey: str | None = None
+) -> str | None:
     try:
-        return normalize_keyword(text)
+        return normalize_keyword(f"{text} {subkey}" if subkey else text)
     except ValueError as exc:
         await interaction.response.send_message(str(exc), ephemeral=True)
         return None
@@ -150,12 +176,17 @@ reply_commands = app_commands.Group(
 )
 
 
-@reply_commands.command(name="create", description="Create a new !!keyword reply")
-@app_commands.describe(keyword="Name such as logs, install, bedrock or offline")
-async def create_reply(interaction: discord.Interaction, keyword: str) -> None:
+@reply_commands.command(name="create", description="Create a !!keyword or !!keyword subkey reply")
+@app_commands.describe(
+    keyword="Base command, e.g. support",
+    subkey="Optional specific topic, e.g. furniture",
+)
+async def create_reply(
+    interaction: discord.Interaction, keyword: str, subkey: str | None = None
+) -> None:
     if not await require_staff(interaction):
         return
-    keyword = await validated_keyword(interaction, keyword)
+    keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
         return
     if store.get(interaction.guild_id, keyword):
@@ -166,12 +197,17 @@ async def create_reply(interaction: discord.Interaction, keyword: str) -> None:
     await interaction.response.send_modal(ReplyModal(interaction.guild_id, keyword, None))
 
 
-@reply_commands.command(name="edit", description="Edit a saved !!keyword reply")
-@app_commands.describe(keyword="The name of an existing reply")
-async def edit_reply(interaction: discord.Interaction, keyword: str) -> None:
+@reply_commands.command(name="edit", description="Edit a saved reply, including an optional subkey")
+@app_commands.describe(
+    keyword="Base command, e.g. support",
+    subkey="Optional specific topic, e.g. furniture",
+)
+async def edit_reply(
+    interaction: discord.Interaction, keyword: str, subkey: str | None = None
+) -> None:
     if not await require_staff(interaction):
         return
-    keyword = await validated_keyword(interaction, keyword)
+    keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
         return
     existing = store.get(interaction.guild_id, keyword)
@@ -181,12 +217,17 @@ async def edit_reply(interaction: discord.Interaction, keyword: str) -> None:
     await interaction.response.send_modal(ReplyModal(interaction.guild_id, keyword, existing))
 
 
-@reply_commands.command(name="delete", description="Delete a saved support reply")
-@app_commands.describe(keyword="The reply name to delete")
-async def delete_reply(interaction: discord.Interaction, keyword: str) -> None:
+@reply_commands.command(name="delete", description="Delete a saved reply, including an optional subkey")
+@app_commands.describe(
+    keyword="Base command, e.g. support",
+    subkey="Optional specific topic, e.g. furniture",
+)
+async def delete_reply(
+    interaction: discord.Interaction, keyword: str, subkey: str | None = None
+) -> None:
     if not await require_staff(interaction):
         return
-    keyword = await validated_keyword(interaction, keyword)
+    keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
         return
     deleted = store.delete(interaction.guild_id, keyword)
@@ -205,12 +246,17 @@ async def list_replies(interaction: discord.Interaction) -> None:
     await interaction.response.send_message(result[:1900] or "No replies yet.", ephemeral=True)
 
 
-@reply_commands.command(name="preview", description="Preview an existing support reply privately")
-@app_commands.describe(keyword="The name of an existing reply")
-async def preview_reply(interaction: discord.Interaction, keyword: str) -> None:
+@reply_commands.command(name="preview", description="Preview a reply, including an optional subkey")
+@app_commands.describe(
+    keyword="Base command, e.g. support",
+    subkey="Optional specific topic, e.g. furniture",
+)
+async def preview_reply(
+    interaction: discord.Interaction, keyword: str, subkey: str | None = None
+) -> None:
     if not await require_staff(interaction):
         return
-    keyword = await validated_keyword(interaction, keyword)
+    keyword = await validated_keyword(interaction, keyword, subkey)
     if keyword is None:
         return
     reply = store.get(interaction.guild_id, keyword)

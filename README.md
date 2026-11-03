@@ -7,10 +7,13 @@ Staff with the **Manage Messages** permission can create and edit replies *insid
 ## Usage
 
 1. Run `/reply create keyword:logsdump` and fill in the popup form with the response text. Titles are optional; replies are green embeds by default. Markdown, links, code formatting and line breaks are supported.
-2. Someone types `!!logsdump` in any existing support channel or thread.
-3. The bot immediately posts the saved embed in **that same thread/channel**.
+2. Optionally create a more specific response: `/reply create keyword:support subkey:furniture`.
+3. Someone types `!!logsdump`, `!!support`, or `!!support furniture` in an existing support channel or thread.
+4. The bot **replies to that message** with the saved embed in the same thread/channel.
 
-To edit later, use `/reply edit keyword:logsdump`. Changes become active immediately—no restart required.
+To edit later, use `/reply edit keyword:logsdump` or `/reply edit keyword:support subkey:furniture`. Changes become active immediately—no restart required.
+
+Subkeys are **optional** and contain one word (letters, digits, hyphens, underscores; 1–32 characters). The base reply (`!!support`) and a subkey reply (`!!support furniture`) are separate entries. If the requested subkey is not saved, the bot does nothing; it never sends the wrong/general reply for an unknown subkey. Use `<#CHANNEL_ID>` in the embed description to create a clickable Discord channel reference without notifying members.
 
 | Staff command | Description |
 |---|---|
@@ -35,8 +38,9 @@ The SQLite file defaults to `data/replies.sqlite3`. Store it on persistent disk 
 
 ## Notes
 
-- Only an exact standalone trigger such as `!!offline` activates a reply; other messages are ignored.
+- Only an exact trigger such as `!!offline`, `!!support`, or `!!support furniture` activates a reply; extra text is ignored.
 - Staff need **Manage Messages** permission to use `/reply` administration commands; invocations are open to everyone.
 - Replies intentionally suppress @mentions to avoid unwanted pings.
 - Existing support channels and release announcement webhooks remain unchanged.
+- Upgrades preserve existing `data/replies.sqlite3` entries: the underlying database schema is unchanged. Replace **both** `bot.py` and `storage.py`, then restart the bot.
 - Use the bot for Voxel Horizons support content; example triggers are not preloaded.
