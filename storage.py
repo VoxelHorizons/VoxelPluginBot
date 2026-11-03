@@ -10,7 +10,7 @@ from pathlib import Path
 # Keep both values in the existing keyword column to avoid database migrations.
 NAME = re.compile(r"^[a-z0-9_-]{1,32}(?:[ \t]+[a-z0-9_-]{1,32})?$")
 TRIGGER = re.compile(r"^!!([a-z0-9_-]{1,32})(?:[ \t]+([a-z0-9_-]{1,32}))?$", re.IGNORECASE)
-DEFAULT_COLOR = 0x57F287
+DEFAULT_COLOR = 0x00CBFF
 
 
 @dataclass(frozen=True)
