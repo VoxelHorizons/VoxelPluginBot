@@ -1,0 +1,170 @@
+[
+  {
+    "keyword": "support core",
+    "title": "VoxelCore | Support",
+    "description": "Need help with **VoxelCore**? Please create a thread in the VoxelCore support channel and tell us what you're trying to do.\n\nInclude your **Minecraft version**, **server software**, the **exact VoxelCore JAR filename**, and any relevant logs or configuration snippets.\n\n📖 Documentation: https://github.com/VoxelHorizons/VoxelCore/wiki\n🐛 Bug reports: https://github.com/VoxelHorizons/VoxelCore/issues",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "install",
+    "title": "Voxel Horizons | Installation",
+    "description": "**VoxelCore** is the base plugin. **VoxelFurniture** requires VoxelCore to be installed first.\n\nDownload the **correct VoxelCore JAR for your Minecraft version**, place it in `plugins/`, and start the server. For furniture, add the universal VoxelFurniture JAR too.\n\n📖 Core guide: https://github.com/VoxelHorizons/VoxelCore/wiki/Installation\n🪑 Furniture guide: https://github.com/VoxelHorizons/VoxelFurniture/wiki/Installation",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "install core",
+    "title": "VoxelCore | Installation",
+    "description": "Download **one** version-specific VoxelCore JAR from the official release and put it in your server's `plugins/` folder. Start the server, then follow the installation guide to configure content and build your packs.\n\nDo **not** install several VoxelCore server JARs together.\n\n📦 https://github.com/VoxelHorizons/VoxelCore/releases/tag/v1.0.0\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Installation",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "install furniture",
+    "title": "VoxelFurniture | Installation",
+    "description": "VoxelFurniture requires **VoxelCore v1.0.0**. Install the matching VoxelCore server JAR and `VoxelFurniture-1.0.0-mc1.12-26.3.jar` in `plugins/`, then restart the server.\n\nCreate furniture definitions through the VoxelCore content system and build the required resource pack.\n\n📦 https://github.com/VoxelHorizons/VoxelFurniture/releases/tag/v1.0.0\n📖 https://github.com/VoxelHorizons/VoxelFurniture/wiki/Installation",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "downloads",
+    "title": "Voxel Horizons | Official Downloads",
+    "description": "Please download the plugins from their **official release pages**.\n\n📦 **VoxelCore:** https://github.com/VoxelHorizons/VoxelCore/releases\n🪑 **VoxelFurniture:** https://github.com/VoxelHorizons/VoxelFurniture/releases\n\nVoxelCore has separate JARs for Minecraft version families; Furniture uses one universal JAR. Avoid unofficial mirrors, reuploads or modified distributions.",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "compatibility",
+    "title": "Voxel Horizons | Compatibility",
+    "description": "VoxelCore provides **version-specific builds** and VoxelFurniture provides a universal JAR for supported server versions. Choose the correct Core build for your server.\n\nSupport across a version family does **not** mean every intermediate release was individually tested. **Folia is not supported.** Bedrock rendering may differ from Java.\n\n📖 Core matrix: https://github.com/VoxelHorizons/VoxelCore/wiki/Compatibility\n🪑 Furniture matrix: https://github.com/VoxelHorizons/VoxelFurniture/wiki/Compatibility",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "dependencies",
+    "title": "Voxel Horizons | Dependencies",
+    "description": "**VoxelCore** is the required foundation for **VoxelFurniture**. Install a compatible version of Core before installing Furniture.\n\n**Geyser** is optional and needed only for Bedrock integration. Some integrations, such as WorldGuard, Lands and PlaceholderAPI, are also optional where supported.\n\nIf a plugin will not load, share your startup log and the exact names of the installed JAR files.",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "logs",
+    "title": "Support | Server Logs",
+    "description": "Please upload your server's **`logs/latest.log`** to https://mclo.gs and share the link in your support thread.\n\nTry to reproduce the issue first, then upload a **fresh log covering the error**. Include the time it happened and what you did just beforehand.\n\n**Remove passwords, tokens and other sensitive information** before posting anything publicly.",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "startup",
+    "title": "Support | Plugin Startup Failure",
+    "description": "If VoxelCore or VoxelFurniture fails to start, please share:\n\n• Minecraft version and server software (including build)\n• Exact Core/Furniture JAR filenames\n• Complete startup error from `logs/latest.log` (https://mclo.gs)\n• Whether this is a fresh install or an update\n\nCheck the compatibility guide and confirm **VoxelCore loads before Furniture**.",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "bedrock",
+    "title": "VoxelCore | Bedrock Support",
+    "description": "Bedrock support uses **Geyser** alongside VoxelCore's Bedrock pack generation and supported item/block mappings. The separate Geyser extension adds supported **entity projection** features.\n\nJava and Bedrock may render or behave differently; full parity is **not guaranteed**.\n\nPlease include your Geyser version, VoxelCore JAR, and screenshots from **both editions** when reporting a difference.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Bedrock-and-Geyser",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "geyser",
+    "title": "VoxelCore | Geyser Integration",
+    "description": "Using Geyser for Bedrock players? Follow the VoxelCore **Bedrock and Geyser** guide to generate supported Bedrock assets and configure Geyser content mappings.\n\nThe Geyser extension is **optional** for additional supported entity projections; it is not another server plugin.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Bedrock-and-Geyser",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "geyser extension",
+    "title": "VoxelCore | Geyser Extension",
+    "description": "The **VoxelCore Geyser extension** is a **separate optional JAR** for supported entity projections on Bedrock.\n\nDownload it from the VoxelCore release, place it in your Geyser **`extensions/`** directory, and restart Geyser. Do **not** put it in Bukkit/Paper's `plugins/` folder.\n\n📦 https://github.com/VoxelHorizons/VoxelCore/releases/tag/v1.0.0\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Bedrock-and-Geyser",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "pack",
+    "title": "VoxelCore | Resource Pack Issues",
+    "description": "If custom textures, fonts or models are missing, confirm that the **correct resource pack** was successfully built and delivered to the client.\n\nPlease share the pack build/validation output, your Minecraft version, the affected content ID and a screenshot of the result. Try reconnecting after updating the pack.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Resource-Packs",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "pack bedrock",
+    "title": "VoxelCore | Bedrock Pack Issues",
+    "description": "If content works on **Java** but not **Bedrock**, confirm that the Bedrock pack was built, Geyser is using the intended mappings, and the client downloaded the updated pack.\n\nPlease share **Java and Bedrock screenshots**, VoxelCore/Geyser versions, pack build logs and the affected item/block/model ID.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Bedrock-and-Geyser",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "blocks",
+    "title": "VoxelCore | Custom Block Problems",
+    "description": "Having trouble with custom blocks? Please share the **block's namespaced ID**, its YAML definition, Minecraft version and screenshots of what is happening.\n\nTell us whether the issue affects **placement**, **textures**, **drops** or **Bedrock display**. Include any pack build warnings or console errors.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Custom-Blocks",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "models",
+    "title": "VoxelCore | Custom Model Problems",
+    "description": "If a custom model is missing, invisible or positioned incorrectly, please share the **content ID**, model definition, Minecraft version and a screenshot.\n\nIf this is a Java/Bedrock difference, include a screenshot from **each edition** plus your pack build output.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Custom-Items\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Resource-Packs",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "ui",
+    "title": "VoxelCore | UI, Fonts & Glyphs",
+    "description": "For missing glyphs, incorrect menu backgrounds, tooltips or font alignment, please share a screenshot, the relevant configuration, Minecraft/client edition and your resource-pack build output.\n\nIf the problem is Bedrock-only, include an equivalent **Java screenshot** for comparison.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/UI-Fonts-and-Glyphs",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "furniture",
+    "title": "VoxelFurniture | Troubleshooting",
+    "description": "Please describe which furniture definition is affected and what action fails: **placing, interacting, seating, storing items or rendering**.\n\nShare the furniture ID/YAML, Minecraft version, Core and Furniture versions, and any console errors. Include Java/Bedrock screenshots if the issue is edition-specific.\n\n📖 https://github.com/VoxelHorizons/VoxelFurniture/wiki/Troubleshooting",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "furniture storage",
+    "title": "VoxelFurniture | Storage Issues",
+    "description": "For broken furniture storage, please tell us whether the inventory **does not open**, **loses items**, **shows the wrong UI** or **fails after a restart**.\n\nInclude the furniture ID, storage configuration, both plugin versions and any server errors. Avoid testing with irreplaceable items.\n\n📖 https://github.com/VoxelHorizons/VoxelFurniture/wiki/Storage-and-Animations",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "furniture animation",
+    "title": "VoxelFurniture | Animation Issues",
+    "description": "For animations or model-state problems, please share the furniture definition, the state transition you're expecting and what actually happens. A short video or before/after screenshots help a lot.\n\nMention whether the problem occurs on **Java, Bedrock or both**.\n\n📖 https://github.com/VoxelHorizons/VoxelFurniture/wiki/Storage-and-Animations",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "furniture protection",
+    "title": "VoxelFurniture | Protection Issues",
+    "description": "If furniture placement, breaking or interaction behaves incorrectly in protected regions, tell us which protection plugin you're using (**WorldGuard, Lands or neither**), the relevant region rules and what you expected.\n\nInclude your Minecraft version, Core/Furniture versions and whether the player has administrator privileges.\n\n📖 https://github.com/VoxelHorizons/VoxelFurniture/wiki/Protection",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "permissions",
+    "title": "Voxel Horizons | Permissions",
+    "description": "If a command or interaction says **no permission**, check your permissions plugin and the relevant permission nodes. VoxelFurniture's basic place, break, sit and inventory permissions are enabled by default; administrative actions are restricted.\n\nShare the **exact command/action**, permission error and affected player's role.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Commands-and-Administration",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "update",
+    "title": "Voxel Horizons | Updating Plugins",
+    "description": "Before updating, **back up** your plugin data, content definitions, generated packs and persistent world data.\n\nDownload the new official release and confirm the VoxelCore build matches your Minecraft version. Check compatibility with your Furniture build before replacing JARs.\n\n📖 https://github.com/VoxelHorizons/VoxelCore/wiki/Upgrading-and-Backups\n📦 https://github.com/VoxelHorizons/VoxelCore/releases",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "bug",
+    "title": "Voxel Horizons | Reporting a Bug",
+    "description": "Found a reproducible bug? Please include:\n\n• Plugin and Minecraft/server versions\n• Exact steps to reproduce\n• Expected result vs actual result\n• `latest.log` link from https://mclo.gs\n• Screenshots/video or minimal configuration if relevant\n\n🐛 **VoxelCore:** https://github.com/VoxelHorizons/VoxelCore/issues\n🪑 **VoxelFurniture:** https://github.com/VoxelHorizons/VoxelFurniture/issues\n\nPlease report security vulnerabilities **privately**, not in public issues.",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "feature",
+    "title": "Voxel Horizons | Feature Requests",
+    "description": "Have an idea for VoxelCore or VoxelFurniture? We'd love to hear it!\n\nPlease explain the **use case**, how you expect it to work and why it would help server owners. Screenshots, mockups and examples are welcome.\n\nCheck existing issues first so we can keep related suggestions together.\n\n📦 https://github.com/VoxelHorizons/VoxelCore/issues\n🪑 https://github.com/VoxelHorizons/VoxelFurniture/issues",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "security",
+    "title": "Voxel Horizons | Security Reports",
+    "description": "Please **do not post exploits, credentials, private server data or vulnerability reproduction steps in public Discord threads**.\n\nUse the relevant repository's security policy for the proper private disclosure route:\n\n📦 https://github.com/VoxelHorizons/VoxelCore/blob/main/SECURITY.md\n🪑 https://github.com/VoxelHorizons/VoxelFurniture/blob/main/SECURITY.md\n\nThis helps us investigate without exposing other servers to risk.",
+    "color": "E67E22"
+  },
+  {
+    "keyword": "license",
+    "title": "Voxel Horizons | Usage & Licensing",
+    "description": "VoxelCore and VoxelFurniture are **free to use and source-available**. You may run them on your server, including monetised servers, and privately customise them within their licence terms.\n\nUnauthorised rehosting, redistribution, repackaging and resale are not permitted, subject to applicable authorised-platform rights. They are **not OSI-approved open-source**.\n\n📄 https://github.com/VoxelHorizons/VoxelCore/blob/main/LICENSE.md\n🪑 https://github.com/VoxelHorizons/VoxelFurniture/blob/main/LICENSE.md",
+    "color": "28B8CF"
+  },
+  {
+    "keyword": "vehicles",
+    "title": "VoxelVehicles | Availability",
+    "description": "**VoxelVehicles** is currently a **private/commercial Voxel Horizons plugin** and is not available for public purchase or download yet.\n\nWe'll announce an official sales channel when it's ready. Please don't download or share unofficial copies.\n\nFor questions about existing authorised installations, use the **VoxelVehicles support channel**.",
+    "color": "28B8CF"
+  }
+]
