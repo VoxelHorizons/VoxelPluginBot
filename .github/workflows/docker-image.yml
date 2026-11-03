@@ -1,0 +1,45 @@
+name: Publish container to GHCR
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Build and publish Docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test SQLite reply storage
+        run: python3 -m unittest discover -s tests -v
+
+      # Use the runner's Docker CLI rather than third-party Actions.
+      # This also works with the organisation's GitHub-owned-Actions policy.
+      - name: Build and push to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          REVISION="sha-${GITHUB_SHA:0:12}"
+
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+          docker build --pull \
+            --tag "$IMAGE:latest" \
+            --tag "$IMAGE:$REVISION" \
+            .
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:$REVISION"
+
+          echo "Published $IMAGE:latest and $IMAGE:$REVISION"
